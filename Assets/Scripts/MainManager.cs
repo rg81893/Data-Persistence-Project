@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MainManager : MonoBehaviour
 {
@@ -11,7 +13,10 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScoreText;
     public GameObject GameOverText;
+    public GameObject ButtonBackToMenu;
+    public GameObject ButtonExit;
     
     private bool m_Started = false;
     private int m_Points;
@@ -36,6 +41,9 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        GameManager.instance.LoadDataFromFile();
+        BestScoreText.text = "Best Score : " + GameManager.instance.bestScore;
     }
 
     private void Update()
@@ -72,5 +80,20 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        ButtonBackToMenu.SetActive(true);
+        ButtonExit.SetActive(true);
+        int best = 0;
+        if (GameManager.instance.bestScore != "0")
+        {
+            string[] datas = GameManager.instance.bestScore.Split(":");
+            best = Convert.ToInt32(datas[1]);
+        }
+        
+        if (m_Points > best)
+        {
+            GameManager.instance.bestScore = GameManager.instance.playerName + " : " + m_Points.ToString();
+            GameManager.instance.SaveDataToFile();
+        }
+
     }
 }
