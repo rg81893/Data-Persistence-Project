@@ -23,7 +23,8 @@ public class MenuManager : MonoBehaviour
             inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
         }
         GameManager.instance.LoadDataFromFile();
-        bestScoreText.text = "Best Score : " + GameManager.instance.bestScore;
+        if (bestScoreText != null)
+            bestScoreText.text = "Best Score : " + GameManager.instance.bestScore;
     }
     public void StartNew()
     {
